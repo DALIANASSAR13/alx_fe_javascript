@@ -208,21 +208,25 @@ function mergeServerQuotes(serverQuotes) {
 // Periodically sync with server
 setInterval(fetchQuotesFromServer, SYNC_INTERVAL);
 
-// Initial sync on page load
-fetchQuotesFromServer();
+// =======================
+// Sync Quotes Function
+// =======================
 
-async function postQuoteToServer(quote) {
-  try {
-    await fetch("https://jsonplaceholder.typicode.com/posts", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(quote)
-    });
-    console.log("Quote posted to server:", quote);
-  } catch (err) {
-    console.error("Error posting quote to server:", err);
+function syncQuotes() {
+  // Fetch latest quotes from server and merge
+  fetchQuotesFromServer();
+
+  // Optionally, post all local quotes to server for syncing
+  // Here we just post the latest quote added
+  // (You could loop over all quotes if desired)
+  const lastQuote = quotes[quotes.length - 1];
+  if (lastQuote) {
+    postQuoteToServer(lastQuote);
   }
 }
 
+// Automatically sync every 60 seconds
+setInterval(syncQuotes, 60000);
+
+// Optional: initial sync on page load
+syncQuotes();
