@@ -230,3 +230,19 @@ setInterval(syncQuotes, 60000);
 
 // Optional: initial sync on page load
 syncQuotes();
+
+async function postQuoteToServer(quote) {
+  try {
+    await fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(quote)
+    });
+    console.log("Quote posted to server:", quote);
+  } catch (err) {
+    console.error("Error posting quote to server:", err);
+  }
+}
+
