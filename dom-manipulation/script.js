@@ -153,3 +153,59 @@ newQuoteBtn.addEventListener("click", showRandomQuote);
 addQuoteBtn.addEventListener("click", addQuote);
 exportBtn.addEventListener("click", exportToJsonFile);
 importInput.addEventListener("change", importFromJsonFile);
+
+// =======================
+// Server Sync Simulation
+// =======================
+
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // Mock server
+const SYNC_INTERVAL = 60000; // 60 seconds
+
+// Fetch latest quotes from server
+async function fetchServerQuotes() {
+  try {
+    const response = await fetch(SERVER_URL);
+    const serverData = await response.json();
+
+    // Simulate server quotes format: [{ text, category }]
+    const serverQuotes = serverData.slice(0, 5).map(post => ({
+      text: post.title,
+      category: "Server"
+    }));
+
+    mergeServerQuotes(serverQuotes);
+  } catch (err) {
+    console.error("Error fetching server quotes:", err);
+  }
+}
+
+// Merge server quotes with local quotes
+function mergeServerQuotes(serverQuotes) {
+  let updated = false;
+
+  serverQuotes.forEach(serverQuote => {
+    // Check if quote already exists locally
+    const exists = quotes.some(
+      q => q.text === serverQuote.text && q.category === serverQuote.category
+    );
+
+    if (!exists) {
+      quotes.push(serverQuote);
+      updated = true;
+    }
+  });
+
+  if (updated) {
+    saveQuotes();
+    populateCategories();
+    showRandomQuote();
+    alert("Local quotes updated from server! Conflicts resolved by server data.");
+  }
+}
+
+// Periodically sync with server
+setInterval(fetchServerQuotes, SYNC_INTERVAL);
+
+// Optional: Initial sync on page load
+fetchServerQuotes();
+
