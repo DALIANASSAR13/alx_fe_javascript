@@ -246,4 +246,34 @@ async function postQuoteToServer(quote) {
     console.error("Error posting quote to server:", err);
   }
 }
+  function createAddQuoteForm() {
+  const container = document.getElementById("addQuoteContainer");
+  
+  // Clear container
+  container.innerHTML = "";
+
+  // Create input for quote text
+  const textInput = document.createElement("input");
+  textInput.id = "newQuoteText";
+  textInput.type = "text";
+  textInput.placeholder = "Enter a new quote";
+
+  // Create input for quote category
+  const categoryInput = document.createElement("input");
+  categoryInput.id = "newQuoteCategory";
+  categoryInput.type = "text";
+  categoryInput.placeholder = "Enter quote category";
+
+  // Create add quote button
+  const addBtn = document.createElement("button");
+  addBtn.id = "addQuoteBtn";
+  addBtn.textContent = "Add Quote";
+  addBtn.addEventListener("click", addQuote); // Existing addQuote function
+
+  // Append inputs and button to container
+  container.appendChild(textInput);
+  container.appendChild(categoryInput);
+  container.appendChild(addBtn);
+}
+
 
