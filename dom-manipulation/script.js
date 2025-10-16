@@ -52,7 +52,6 @@ function getFilteredQuotes() {
   return quotes.filter(q => q.category === selectedCategory);
 }
 
-// Add a new quote
 function addQuote() {
   const textInput = document.getElementById("newQuoteText");
   const categoryInput = document.getElementById("newQuoteCategory");
@@ -65,16 +64,21 @@ function addQuote() {
     return;
   }
 
-  quotes.push({ text, category });
+  const newQuote = { text, category };
+  quotes.push(newQuote);
   saveQuotes();
+
+  // POST new quote to mock server
+  postQuoteToServer(newQuote);
 
   textInput.value = "";
   categoryInput.value = "";
 
-  populateCategories(); // Update dropdown
+  populateCategories(); // Update category dropdown
   alert("New quote added successfully!");
   showRandomQuote();
 }
+
 
 // Save quotes array to localStorage
 function saveQuotes() {
@@ -206,3 +210,19 @@ setInterval(fetchQuotesFromServer, SYNC_INTERVAL);
 
 // Initial sync on page load
 fetchQuotesFromServer();
+
+async function postQuoteToServer(quote) {
+  try {
+    await fetch("https://jsonplaceholder.typicode.com/posts", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(quote)
+    });
+    console.log("Quote posted to server:", quote);
+  } catch (err) {
+    console.error("Error posting quote to server:", err);
+  }
+}
+
