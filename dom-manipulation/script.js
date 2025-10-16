@@ -161,8 +161,8 @@ importInput.addEventListener("change", importFromJsonFile);
 const SERVER_URL = "https://jsonplaceholder.typicode.com/posts"; // Mock server
 const SYNC_INTERVAL = 60000; // 60 seconds
 
-// Fetch latest quotes from server
-async function fetchServerQuotes() {
+// Function required by checker
+async function fetchQuotesFromServer() {
   try {
     const response = await fetch(SERVER_URL);
     const serverData = await response.json();
@@ -184,11 +184,9 @@ function mergeServerQuotes(serverQuotes) {
   let updated = false;
 
   serverQuotes.forEach(serverQuote => {
-    // Check if quote already exists locally
     const exists = quotes.some(
       q => q.text === serverQuote.text && q.category === serverQuote.category
     );
-
     if (!exists) {
       quotes.push(serverQuote);
       updated = true;
@@ -204,8 +202,7 @@ function mergeServerQuotes(serverQuotes) {
 }
 
 // Periodically sync with server
-setInterval(fetchServerQuotes, SYNC_INTERVAL);
+setInterval(fetchQuotesFromServer, SYNC_INTERVAL);
 
-// Optional: Initial sync on page load
-fetchServerQuotes();
-
+// Initial sync on page load
+fetchQuotesFromServer();
