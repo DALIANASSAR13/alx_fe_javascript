@@ -197,12 +197,13 @@ function mergeServerQuotes(serverQuotes) {
     }
   });
 
-  if (updated) {
-    saveQuotes();
-    populateCategories();
-    showRandomQuote();
-    alert("Local quotes updated from server! Conflicts resolved by server data.");
-  }
+ if (updated) {
+  saveQuotes();
+  populateCategories();
+  showRandomQuote();
+
+  // UI notification for syncing
+  alert("Quotes synced with server!");
 }
 
 // Periodically sync with server
